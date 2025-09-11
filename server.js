@@ -19,8 +19,8 @@ app.use(express.static("public"));
 const client = new ChimeSDKMeetingsClient({
   region: REGION,
   credentials: {
-    accessKeyId: process.env.AWS_CHIME_KEY || process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_CHIME_SECRET || process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || "",
   },
 });
 const rooms = new Map();
@@ -643,6 +643,7 @@ app.get("/profile/:meetingId", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server running: http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
