@@ -10,7 +10,7 @@ import {
 } from "@aws-sdk/client-chime-sdk-meetings";
 
 import { STSClient, GetCallerIdentityCommand } from "@aws-sdk/client-sts";
-const REGION = process.env.AWS_CHIME_REGION || process.env.AWS_REGION || "us-east-1";
+const REGION = process.env.AWS_REGION || process.env.AWS_REGION || "us-east-1";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -19,8 +19,11 @@ app.use(express.static("public"));
 const client = new ChimeSDKMeetingsClient({
   region: REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || "",
+    accessKeyId:
+      process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey:
+      process.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || "",
+    sessionToken: process.env.AWS_SESSION_TOKEN || undefined,
   },
 });
 const rooms = new Map();
@@ -541,15 +544,23 @@ app.get("/meeting-details/:meetingId", async (req, res) => {
 app.get("/whoami", async (_req, res) => {
   try {
     const sts = new STSClient({
-      region: process.env.AWS_REGION || "us-east-1",
+      region: process.env.AWS_REGION || REGION,
+      credentials: {
+        accessKeyId:
+          process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "",
+        secretAccessKey:
+          process.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || "",
+        sessionToken: process.env.AWS_SESSION_TOKEN || undefined,
+      },
     });
     const out = await sts.send(new GetCallerIdentityCommand({}));
     res.json({
       account: out.Account,
       arn: out.Arn,
       userId: out.UserId,
-      region: process.env.AWS_REGION,
-      key_tail: (process.env.AWS_ACCESS_KEY_ID || "").slice(-4),
+      region: process.env.AWS_REGION || REGION,
+      key_tail:
+        (process.env.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || "").slice(-4),
     });
   } catch (e) {
     res.status(500).json({ error: String(e) });
