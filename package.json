@@ -1,0 +1,23 @@
+{
+  "name": "chime-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/collaborators-limit.test.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-chime-sdk-meetings": "^3.864.0",
+    "@aws-sdk/client-sts": "^3.864.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "nodemon": "^1.4.1"
+  }
+}

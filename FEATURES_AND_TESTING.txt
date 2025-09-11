@@ -1,0 +1,74 @@
+Test: collaborators limit (max 4)
+--------------------------------
+1) Start server: npm start
+2) Create meeting via GET /meeting -> get meetingId and hostAttendeeId
+3) Attempt POST /collaborators/:meetingId with 5 ids and currentHostId=hostAttendeeId
+   - Expect 400 { error: "Maximum of 4 collaborators allowed" }
+4) Attempt with exactly 4 -> expect 200 and collaborators length 4
+
+Chime App — Features and How-To
+
+Features
+- Express.js backend
+  - POST /meeting → create a meeting (returns Meeting + meetingId + room)
+  - POST /attendee → join an attendee by meetingId (returns Attendee)
+  - GET /meeting → convenience endpoint returns a ready-to-open URL with meetingInfo
+  - GET /join/:meetingId or /join/:room → returns a ready-to-open URL for another attendee
+  - Auxiliary: /pair (2 attendees), /group (N attendees)
+- Frontend (plain HTML/JS)
+  - Name input, Request Cam/Mic, Start, Stop
+  - Video controls: Mute, Video On/Off
+  - Dynamic video tiles for multiple participants (local + remote)
+  - LOVE reaction: toast (bottom-right) + center animation; sends via Socket.io if present or Chime DataMessage fallback
+  - Meeting details UI (host), attendees list, basic quality indicator
+- Config
+  - .env supports AWS_CHIME_KEY, AWS_CHIME_SECRET, AWS_CHIME_REGION (or standard AWS_* env vars)
+
+Setup
+1) Install deps
+   npm install
+2) Configure env
+   - Copy env.example to .env and fill values
+   - Required: AWS_CHIME_KEY, AWS_CHIME_SECRET, AWS_CHIME_REGION (e.g., us-east-1)
+3) Run server
+   npm run dev  (or npm start)
+   Open http://localhost:3000
+
+Quick Test (single user)
+- In PowerShell:
+  $resp = Invoke-RestMethod -Method Get -Uri "http://localhost:3000/meeting"
+  Start-Process $resp.url
+- Page steps: Enter your name → Request Cam/Mic → Start → Click Video Off to turn Video On
+
+Two Participants (recommended)
+Option A — Pair
+1) Open http://localhost:3000/pair
+2) The response has urlA (host) and urlB (guest)
+3) Open urlA in Browser A and urlB in Browser B (or another device)
+4) On each: name → Request Cam/Mic → Start → Video On
+
+Option B — Meeting + Join
+1) Create meeting: http://localhost:3000/meeting
+   - Copy meetingId and open the url in Browser A
+2) In Browser B, open http://localhost:3000/join/<meetingId>
+   - Open the returned url
+3) On each browser: name → Request Cam/Mic → Start → Video On
+
+Notes on Cameras
+- Most browsers lock a physical camera to one tab/app at a time
+- For testing on one device, use two browsers (e.g., Chrome + Edge) or run Chrome with a fake camera:
+  chrome.exe --use-fake-device-for-media-stream --use-fake-ui-for-media-stream
+
+Reactions (LOVE)
+- Click LOVE ❤️ after joining to broadcast a reaction
+- All attendees see:
+  - Toast: "❤️ LOVE reaction"
+  - Center animation: floating heart
+
+Troubleshooting
+- If Start fails, ensure meetingInfo is present (use the url returned by /meeting or /join)
+- If video tiles don’t appear:
+  - Ensure each participant clicked Video On
+  - Check camera permissions (address bar icon)
+  - Use different browsers/devices or fake device flags
+  - Verify both are in the same meetingId

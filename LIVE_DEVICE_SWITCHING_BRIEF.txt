@@ -1,0 +1,50 @@
+Title: Live Camera & Microphone Switching (In-Call)
+
+Overview
+- Added seamless switching of camera and microphone during an active call.
+- Device dropdowns remain enabled after joining; selections apply instantly without dropping the session.
+- Integrates with background blur/replacement: switching cameras preserves effects where supported.
+- Listens for hardware changes (devicechange) to refresh device lists and auto-failover when devices are unplugged.
+
+Key Implementation Points (public/chimeUtilities.js)
+- Live switching handlers:
+  - Camera: on change -> switchVideoInput(deviceId)
+  - Microphone: on change -> switchAudioInput(deviceId)
+- Helpers for SDK compatibility:
+  - switchAudioInput: uses startAudioInput or chooseAudioInputDevice
+  - switchVideoInput: prefers transformDevice.chooseNewInnerDevice; otherwise re-applies BackgroundFilterHandler; falls back to chooseVideoInputDevice/startVideoInput
+- UI remains interactive:
+  - Select elements (camera/mic/speaker) stay enabled during calls
+- Device inventory management:
+  - refreshDeviceLists: repopulates selects and preserves current choices when possible
+  - devicechange listener triggers refresh and auto-selects a valid device if the previous disappears
+
+How To Test
+1) Basic Audio Switch
+   - Start a meeting
+   - Speak and verify audio
+   - Change Microphone from the microphone dropdown
+   - Expected: audio stays live; remote participants still hear you from the new mic; no reconnection
+
+2) Basic Video Switch
+   - Start a meeting and turn on video
+   - Change Camera from the camera dropdown
+   - Expected: local preview updates; remote participants see video switch smoothly; no reconnection
+
+3) With Background Effects
+   - Enable background blur or replacement
+   - Change Camera
+   - Expected: effect remains applied after the switch; if not supported, video continues without interruption
+
+4) Device Removal & Failover
+   - While on a call, unplug the active microphone or camera
+   - Expected: dropdowns refresh automatically; app selects the next available device and continues the session; logs indicate the switch
+
+5) Multi-Browser Check
+   - Chrome/Edge: full feature set expected
+   - Firefox: switching should work; note differences in sinkId support
+   - Safari: switching should work where APIs are supported
+
+Troubleshooting
+- If a switch fails, check console logs for: "audio device switch failed" / "video device switch failed"
+- Ensure site has camera/mic permissions and that the selected device is not in use by another app

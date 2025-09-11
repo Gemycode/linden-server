@@ -1,0 +1,119 @@
+[CamMicHandler] Setting up toggle handlers...
+chime-sdk.html?meetingInfo=%3D%3D:525 [CamMicHandler] Audio toggle button found: <button data-toggle-audio disabled>​Mute​</button>​
+chime-sdk.html?meetingInfo=%3D%3D:541 [CamMicHandler] Video toggle button found: <button data-toggle-video disabled>​Video Off​</button>​
+chime-sdk.html?meetingInfo=%3D%3D:1734 [CamMic] Requesting camera + microphone access...
+chime-sdk.html?meetingInfo=%3D%3D:363 [CamMic] Requesting camera + microphone access...
+chime-sdk.html?meetingInfo=%3D%3D:368 [CamMic] ✅ Camera + Mic access granted!
+chime-sdk.html?meetingInfo=%3D%3D:372 [CamMic] Video Tracks: [MediaStreamTrack]
+chime-sdk.html?meetingInfo=%3D%3D:373 [CamMic] Audio Tracks: [MediaStreamTrack]
+chime-sdk.html?meetingInfo=%3D%3D:2594 [Preview] Starting preview with device: a4e13a20bf92f12ecc63504ef1bd7c756b7c3dc105667457c8bcb5b15276aea5
+chime-sdk.html?meetingInfo=%3D%3D:1557 [CHIME] SDK loaded (fs.codelinden.com)
+chime-sdk.html?meetingInfo=%3D%3D:1794 [Meeting] Parsed meeting info: {Meeting: {…}, Attendee: {…}, isHost: true, maxAttendees: 10, isGroupCall: false, …}
+chime-sdk.html?meetingInfo=%3D%3D:1820 [Meeting] User role: Host
+chime-sdk.html?meetingInfo=%3D%3D:1821 [Meeting] Host Attendee ID: f8164d61-b920-265f-909e-c85a91bf65cf
+chime-sdk.html?meetingInfo=%3D%3D:1822 [Meeting] Raw info object: {
+  "Meeting": {
+    "ExternalMeetingId": "meeting-1756536556769",
+    "MediaPlacement": {
+      "AudioFallbackUrl": "wss://wss.k.m2.ue1.app.chime.aws:443/calls/e69a1cb8-21fd-4c80-b8ec-808a47112713",
+      "AudioHostUrl": "01e718db7bb5b45edcab8e5b3365a602.k.m2.ue1.app.chime.aws:3478",
+      "EventIngestionUrl": "https://data.svc.ue1.ingest.chime.aws/v1/client-events",
+      "ScreenDataUrl": "wss://bitpw.m2.ue1.app.chime.aws:443/v2/screen/e69a1cb8-21fd-4c80-b8ec-808a47112713",
+      "ScreenSharingUrl": "wss://bitpw.m2.ue1.app.chime.aws:443/v2/screen/e69a1cb8-21fd-4c80-b8ec-808a47112713",
+      "ScreenViewingUrl": "wss://bitpw.m2.ue1.app.chime.aws:443/ws/connect?passcode=null&viewer_uuid=null&X-BitHub-Call-Id=e69a1cb8-21fd-4c80-b8ec-808a47112713",
+      "SignalingUrl": "wss://signal.m2.ue1.app.chime.aws/control/e69a1cb8-21fd-4c80-b8ec-808a47112713",
+      "TurnControlUrl": "https://2713.cell.us-east-1.meetings.chime.aws/v2/turn_sessions"
+    },
+    "MediaRegion": "us-east-1",
+    "MeetingArn": "arn:aws:chime:us-east-1:836940249108:meeting/e69a1cb8-21fd-4c80-b8ec-808a47112713",
+    "MeetingId": "e69a1cb8-21fd-4c80-b8ec-808a47112713",
+    "TenantIds": []
+  },
+  "Attendee": {
+    "AttendeeId": "f8164d61-b920-265f-909e-c85a91bf65cf",
+    "Capabilities": {
+      "Audio": "SendReceive",
+      "Content": "SendReceive",
+      "Video": "SendReceive"
+    },
+    "ExternalUserId": "user-1756536558438",
+    "JoinToken": "ZjgxNjRkNjEtYjkyMC0yNjVmLTkwOWUtYzg1YTkxYmY2NWNmOjcxM2Q4ZDNkLWU0YzUtNDZhYi04NzU1LTIwODI5ZjEyYmU2ZQ"
+  },
+  "isHost": true,
+  "maxAttendees": 10,
+  "isGroupCall": false,
+  "room": "meeting-1756536556769",
+  "hostAttendeeId": "f8164d61-b920-265f-909e-c85a91bf65cf"
+}
+chime-sdk.html?meetingInfo=%3D%3D:918 [HostControls] Direct call - no host controls
+chime-sdk.html?meetingInfo=%3D%3D:1839 [CHIME] User is host: true
+chime-sdk.html?meetingInfo=%3D%3D:1840 [CHIME] Is group call: false
+chime-sdk.html?meetingInfo=%3D%3D:1841 [CHIME] Max attendees: 10
+chime-sdk.html?meetingInfo=%3D%3D:1176 [HostControls] User is host for meeting: e69a1cb8-21fd-4c80-b8ec-808a47112713
+chime-sdk.html?meetingInfo=%3D%3D:1849 [CHIME] Host controls initialized
+chime-sdk.html?meetingInfo=%3D%3D:1875 [SELF] attendeeId: f8164d61-b920-265f-909e-c85a91bf65cf
+chime-sdk.html?meetingInfo=%3D%3D:2430 [CHIME] No connection health subscription API found on audioVideo
+(anonymous) @ chime-sdk.html?meetingInfo=%3D%3D:2430Understand this warning
+chime-sdk.html?meetingInfo=%3D%3D:1985 [CHIME] connecting {reconnecting: false}
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 1, local: true, active: false, attendee: null, isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2015 [VideoTile] Local tile detected, isHost: true
+chime-sdk.html?meetingInfo=%3D%3D:2027 [VideoTile] Host video bound to main video
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 1, local: true, active: false, attendee: 'f8164d61-b920-265f-909e-c85a91bf65cf', isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2015 [VideoTile] Local tile detected, isHost: true
+chime-sdk.html?meetingInfo=%3D%3D:2027 [VideoTile] Host video bound to main video
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 1, local: true, active: false, attendee: 'f8164d61-b920-265f-909e-c85a91bf65cf', isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2015 [VideoTile] Local tile detected, isHost: true
+chime-sdk.html?meetingInfo=%3D%3D:2027 [VideoTile] Host video bound to main video
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:2220 [Presence] Meeting became group call, updating main video
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1989 [CHIME] connected
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 1, local: true, active: true, attendee: 'f8164d61-b920-265f-909e-c85a91bf65cf', isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2015 [VideoTile] Local tile detected, isHost: true
+chime-sdk.html?meetingInfo=%3D%3D:2027 [VideoTile] Host video bound to main video
+2chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1114 [MainVideo] Updating main video, isHost: true hostAttendeeId: f8164d61-b920-265f-909e-c85a91bf65cf
+15chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:532 [CamMicHandler] Audio toggle clicked
+chime-sdk.html?meetingInfo=%3D%3D:557 [CamMicHandler] toggleAudio called, av: {audioVideoController: we, videoTileController: {…}, realtimeController: {…}, audioMixController: {…}, deviceController: C, …}
+chime-sdk.html?meetingInfo=%3D%3D:570 [CamMicHandler] Current mute state: false
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:579 [CamMicHandler] Audio muted
+chime-sdk.html?meetingInfo=%3D%3D:638 [CamMicHandler] Updating toggle button text...
+chime-sdk.html?meetingInfo=%3D%3D:647 [CamMicHandler] Audio button text updated to: Unmute
+chime-sdk.html?meetingInfo=%3D%3D:657 [CamMicHandler] Video button text updated to: Video On
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1320 [HostControls] Toggled attendee audio: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb true
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:2271 [Presence] Attendee left, updating main video
+chime-sdk.html?meetingInfo=%3D%3D:1114 [MainVideo] Updating main video, isHost: true hostAttendeeId: f8164d61-b920-265f-909e-c85a91bf65cf
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:2220 [Presence] Meeting became group call, updating main video
+2chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+2chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 2, local: false, active: false, attendee: null, isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 2, local: false, active: false, attendee: '02ae0e08-3bf8-098b-53a1-5b1f6cb64edb', isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2063 [VideoTile] Remote tile for attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:2064 [VideoTile] Current state: {hostAttendeeId: 'f8164d61-b920-265f-909e-c85a91bf65cf', isCurrentUserHost: true, currentUser: 'f8164d61-b920-265f-909e-c85a91bf65cf'}
+chime-sdk.html?meetingInfo=%3D%3D:2075 [VideoTile] Host check: {attId: '02ae0e08-3bf8-098b-53a1-5b1f6cb64edb', hostAttendeeId: 'f8164d61-b920-265f-909e-c85a91bf65cf', isRemoteHost: false, stringMatch: false}
+chime-sdk.html?meetingInfo=%3D%3D:2112 [VideoTile] Adding non-host participant to sidebar: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:2140 [VideoTile] Created remote video element: remote-2
+chime-sdk.html?meetingInfo=%3D%3D:2145 [VideoTile] Bound remote video for attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:2001 [VideoTile] Tile update: {tileId: 2, local: false, active: true, attendee: '02ae0e08-3bf8-098b-53a1-5b1f6cb64edb', isHost: true, …}
+chime-sdk.html?meetingInfo=%3D%3D:2063 [VideoTile] Remote tile for attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:2064 [VideoTile] Current state: {hostAttendeeId: 'f8164d61-b920-265f-909e-c85a91bf65cf', isCurrentUserHost: true, currentUser: 'f8164d61-b920-265f-909e-c85a91bf65cf'}
+chime-sdk.html?meetingInfo=%3D%3D:2075 [VideoTile] Host check: {attId: '02ae0e08-3bf8-098b-53a1-5b1f6cb64edb', hostAttendeeId: 'f8164d61-b920-265f-909e-c85a91bf65cf', isRemoteHost: false, stringMatch: false}
+chime-sdk.html?meetingInfo=%3D%3D:2112 [VideoTile] Adding non-host participant to sidebar: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:2117 [VideoTile] Reusing existing video element for attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:2120 [VideoTile] Rebound existing video for attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:1114 [MainVideo] Updating main video, isHost: true hostAttendeeId: f8164d61-b920-265f-909e-c85a91bf65cf
+chime-sdk.html?meetingInfo=%3D%3D:2518 All video elements cleaned up
+chime-sdk.html?meetingInfo=%3D%3D:2594 [Preview] Starting preview with device: a4e13a20bf92f12ecc63504ef1bd7c756b7c3dc105667457c8bcb5b15276aea5
+27chime-sdk.html?meetingInfo=%3D%3D:1298 [HostControls] Removed attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb
+chime-sdk.html?meetingInfo=%3D%3D:1262 [AttendeeList] Rendered attendee list with controls
+chime-sdk.html?meetingInfo=%3D%3D:1320 [HostControls] Toggled attendee audio: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb true
+chime-sdk.html?meetingInfo=%3D%3D:1298 [HostControls] Removed attendee: 02ae0e08-3bf8-098b-53a1-5b1f6cb64edb

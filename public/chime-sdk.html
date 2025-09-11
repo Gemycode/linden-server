@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chime Start (Start button only) — v6</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="./chimeUtilities.js" defer></script>
+
+    <style>
+      [hidden] {
+        display: none !important;
+      }
+
+      body {
+        font-family: system-ui, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+        padding: 12px;
+      }
+
+      input,
+      button,
+      select {
+        font: inherit;
+      }
+
+      video {
+        width: 100%;
+        max-width: 520px;
+        background: #000;
+      }
+
+      [data-status] {
+        padding: 6px 8px;
+        display: inline-block;
+      }
+
+      [data-status="connecting"] {
+        background: #d1fae5;
+      }
+
+      [data-status="connected"] {
+        background: #bbf7d0;
+      }
+
+      [data-status="disconnected"] {
+        background: #fecaca;
+      }
+
+      [data-q] {
+        height: 6px;
+        background: #ddd;
+        max-width: 520px;
+      }
+
+      [data-q] i {
+        display: block;
+        height: 100%;
+        width: 100%;
+      }
+
+      [data-q][data-level="bad"] i {
+        background: #f87171;
+        width: 33%;
+      }
+
+      [data-q][data-level="fair"] i {
+        background: #facc15;
+        width: 66%;
+      }
+
+      [data-q][data-level="good"] i {
+        background: #34d399;
+        width: 100%;
+      }
+
+      [row] {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      [col] {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      /* ---- per-tile status line ---- */
+      .statusline {
+        font-size: 12px;
+        opacity: 0.9;
+        max-width: 520px;
+      }
+
+      .statusline b {
+        font-weight: 600;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 6px;
+        margin-right: 6px;
+      }
+
+      .b-audio.muted {
+        background: #fee2e2;
+      }
+
+      /* red-ish */
+      .b-audio.live {
+        background: #dcfce7;
+      }
+
+      /* green-ish */
+      .b-video.off {
+        background: #fde68a;
+      }
+
+      /* amber */
+      .b-video.on {
+        background: #e0e7ff;
+      }
+
+      /* indigo */
+      .b-q.good {
+        background: #d1fae5;
+      }
+
+      .b-q.fair {
+        background: #fef3c7;
+      }
+
+      .b-q.bad {
+        background: #fecaca;
+      }
+
+      .grid-tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 8px;
+        max-width: 1040px;
+      }
+
+      /* Toasts */
+      #toast-container {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 2000;
+        pointer-events: none;
+      }
+      .toast {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        padding: 10px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        transform: translateY(12px);
+        opacity: 0;
+        pointer-events: auto;
+        transition: transform 200ms ease, opacity 200ms ease;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Center-screen reactions */
+      #reaction-layer {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 3000;
+      }
+      .reaction-float {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.6);
+        font-size: 64px;
+        filter: drop-shadow(0 6px 14px rgba(0,0,0,.35));
+        opacity: 0;
+        animation: pop-float 1200ms ease-out forwards;
+      }
+      @keyframes pop-float {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+        20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        70% { opacity: 1; transform: translate(-50%, -58%) scale(1); }
+        100% { opacity: 0; transform: translate(-50%, -72%) scale(1.05); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- === Meeting: User & Pre-Join Controls === -->
+    <main col id="left-pane">
+      <!-- Username and avatar (pre-join identity) -->
+      <div row id="username-section">
+        <input
+          id="username-input"
+          placeholder="Enter your name"
+          style="
+            width: 200px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          "
+        />
+        <div
+          id="user-avatar"
+          style="
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 10px;
+          "
+        ></div>
+      </div>
+
+      <!-- Meeting details editor (tied to meeting object) -->
+      <section col id="meeting-details-section" hidden>
+        <h3>Meeting Details</h3>
+        <input
+          id="meeting-title"
+          placeholder="Meeting Title"
+          style="
+            width: 100%;
+            max-width: 520px;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+          "
+        />
+        <textarea
+          id="meeting-topic"
+          placeholder="Meeting Topic/Agenda"
+          style="
+            width: 100%;
+            max-width: 520px;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 60px;
+            resize: vertical;
+          "
+        ></textarea>
+        <textarea
+          id="discussion-points"
+          placeholder="Discussion Points (one per line)"
+          style="
+            width: 100%;
+            max-width: 520px;
+            padding: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            height: 80px;
+            resize: vertical;
+          "
+        ></textarea>
+      </section>
+      <div row>
+        <input
+          data-url
+          placeholder="paste ?meetingInfo=… or full meeting URL"
+          style="width: 100%; max-width: 520px"
+        />
+        <button data-perms>Request Cam/Mic</button>
+        <button data-start>Start</button>
+        <button data-stop>Stop</button>
+      </div>
+
+      <div row>
+        <select data-video></select>
+        <select data-audio></select>
+        <select data-out></select>
+      </div>
+
+      <!-- Local media preview before joining -->
+      <div col>
+        <div>Local Preview (pre-join)</div>
+        <video autoplay playsinline muted hidden data-preview></video>
+      </div>
+
+      <div row>
+        <div class="mono" data-status>disconnected</div>
+        <div>Timer: <span data-timer>00:00</span></div>
+      </div>
+
+      <div data-q data-level="good"><i></i></div>
+
+      <!-- In-call controls -->
+      <div row>
+        <button data-toggle-audio disabled>Mute</button>
+        <button data-toggle-video disabled>Video Off</button>
+        <button id="love-btn" disabled title="Send LOVE to everyone">LOVE ❤️</button>
+      </div>
+
+      <!-- Background filter controls -->
+      <div row>
+        <label>Background Filter:</label>
+        <select id="background-filter-select" disabled>
+          <option value="none">None</option>
+          <option value="blur-low">Blur</option>
+          <!-- <option value="blur-medium">Blur (Medium)</option>
+          <option value="blur-high">Blur (High)</option> -->
+          <option value="predefined">Predefined Backgrounds</option>
+          <option value="replacement">Custom Image URL</option>
+        </select>
+        <select id="predefined-backgrounds" style="display: none;" disabled>
+          <option value="">Select Background...</option>
+          <option value="office">Office</option>
+          <option value="nature">Nature</option>
+        </select>
+        <input type="url" id="background-image-url" placeholder="Image URL" style="display: none;" />
+        <button id="apply-background-filter" disabled>Apply Filter</button>
+      </div>
+
+      <!-- Host controls (visible to host only) -->
+      <div row id="host-controls" hidden>
+        <h3>Host Controls</h3>
+        <button id="mute-all">Mute All</button>
+        <button id="unmute-all">Unmute All</button>
+        <button id="pin-attendee">Pin Attendee</button>
+        <button id="set-max-attendees">Set Max Attendees</button>
+        <div style="margin-top: 8px">
+          <label style="display: block; font-size: 12px; opacity: 0.8">
+            Collaborators (comma-separated attendee IDs, max 4)
+          </label>
+          <input
+            id="collab-input"
+            placeholder="attendeeId1, attendeeId2..."
+            style="
+              max-width: 520px;
+              width: 100%;
+              padding: 6px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+            "
+          />
+          <button id="collab-save" style="margin-top: 6px">
+            Save Collaborators
+          </button>
+        </div>
+
+        <div
+          id="attendee-list"
+          class="mono"
+          style="font-size: 12px; margin-top: 8px"
+        ></div>
+      </div>
+    </main>
+
+    <!-- === Meeting: Main Video & Participant Grid === -->
+    <section col id="video-pane" aria-label="Video Areas">
+      <!-- Main Video Area (host/featured video) -->
+      <div col id="main-video-area">
+        <div>Main Video</div>
+        <video
+          autoplay
+          playsinline
+          muted
+          data-main-video
+          style="width: 100%; max-width: 800px; background: #000"
+        ></video>
+        <div class="statusline" id="main-video-status"></div>
+      </div>
+
+      <!-- Sidebar Grid (Other Attendees) -->
+      <div row style="gap: 16px; align-items: flex-start">
+        <!-- Local Video (if not main) -->
+        <div col id="local-video-sidebar" hidden>
+          <div>Local</div>
+          <video
+            autoplay
+            playsinline
+            muted
+            data-local
+            style="width: 200px; background: #000"
+          ></video>
+          <div class="statusline" id="status-self"></div>
+        </div>
+
+        <!-- Remote Videos Grid -->
+        <div col>
+          <div>Other Participants</div>
+          <div
+            class="grid-tiles"
+            data-remotes
+            style="
+              grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+              max-width: 600px;
+            "
+          ></div>
+        </div>
+      </div>
+
+      <!-- Meeting info bar (meeting object summary) -->
+      <div
+        row
+        id="meeting-info"
+        style="background: #f0f0f0; padding: 8px; border-radius: 4px"
+      >
+        <div>Meeting: <span id="meeting-id">-</span></div>
+        <div>
+          Participants: <span id="participant-count">1</span>/<span
+            id="max-participants"
+            >10</span
+          >
+        </div>
+        <div id="meeting-type">Direct Call</div>
+      </div>
+    </section>
+
+    <!-- === Meeting: Details Display (read-only) === -->
+    <section
+      id="meeting-details-display"
+      style="
+        background: #f8f9fa;
+        padding: 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+        border: 1px solid #e9ecef;
+      "
+      hidden
+    >
+      <h3
+        id="display-meeting-title"
+        style="margin: 0 0 12px 0; color: #495057"
+      ></h3>
+      <div
+        id="display-meeting-topic"
+        style="margin-bottom: 16px; color: #6c757d; font-style: italic"
+      ></div>
+      <div id="display-discussion-points" style="color: #495057">
+        <strong>Discussion Points:</strong>
+        <ul
+          id="discussion-points-list"
+          style="margin: 8px 0 0 0; padding-left: 20px"
+        ></ul>
+      </div>
+    </section>
+
+    <!-- === Notifications === -->
+    <aside
+      col
+      id="notifications"
+      style="position: fixed; top: 20px; right: 20px; z-index: 1000"
+    ></aside>
+
+    <!-- audio bind -->
+    <audio data-audio-el autoplay></audio>
+
+    <!-- Hidden sandbox for Cam/Mic script so it runs unchanged -->
+    <!-- (kept isolated for compatibility; unrelated to meeting object) -->
+    <div id="cam-mic-sandbox" hidden>
+      <button id="btn-check-perms"></button>
+      <button id="btn-watch-perms"></button>
+      <button id="btn-camera"></button>
+      <button id="btn-mic"></button>
+      <button id="btn-both"></button>
+      <button id="btn-list-devices"></button>
+      <button id="btn-stop"></button>
+
+      <div id="cm-loader"></div>
+      <div id="cm-permission-icons">
+        <div id="cm-need-camera"></div>
+        <div id="cm-need-microphone"></div>
+      </div>
+      <div id="cm-device-select">
+        <label
+          >Camera:
+          <select id="cm-video-select"></select
+        ></label>
+        <label
+          >Microphone:
+          <select id="cm-audio-select"></select
+        ></label>
+      </div>
+
+      <button id="cm-start-both"></button>
+      <button id="cm-start-camera"></button>
+      <button id="cm-start-microphone"></button>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+    <!-- Center reaction layer -->
+    <div id="reaction-layer"></div>
+  </body>
+</html>
