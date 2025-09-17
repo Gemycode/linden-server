@@ -11,6 +11,25 @@
         display: none !important;
       }
 
+      .meeting-col {
+        max-width: 400px;
+        margin: auto;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .person {
+        margin-bottom: 15px;
+      }
+
+      .feed {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: #000;
+      }
+
       body {
         font-family: system-ui, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
         padding: 12px;
@@ -204,145 +223,199 @@
   </head>
 
   <body>
-    <!-- === Meeting: User & Pre-Join Controls === -->
-    <main col id="left-pane">
-      <!-- Username and avatar (pre-join identity) -->
-      <div row id="username-section">
-        <input
-          id="username-input"
-          placeholder="Enter your name"
-          style="
-            width: 200px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-          "
-        />
+    <div class="meeting-col">
+      <!-- Meeting Info -->
+      <div class="section" id="meeting-info-section">
+        <h3>Meeting Info</h3>
+        
+        <!-- Meeting URL Input -->
+        <div row>
+          <input
+            data-url
+            placeholder="paste ?meetingInfo=… or full meeting URL"
+            style="width: 100%; max-width: 520px"
+          />
+        </div>
+        
+        <!-- Meeting details editor (tied to meeting object) -->
+        <section col id="meeting-details-section" hidden>
+          <input
+            id="meeting-title"
+            placeholder="Meeting Title"
+            style="
+              width: 100%;
+              max-width: 520px;
+              padding: 8px;
+              margin-bottom: 8px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+            "
+          />
+          <textarea
+            id="meeting-topic"
+            placeholder="Meeting Topic/Agenda"
+            style="
+              width: 100%;
+              max-width: 520px;
+              padding: 8px;
+              margin-bottom: 8px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+              height: 60px;
+              resize: vertical;
+            "
+          ></textarea>
+          <textarea
+            id="discussion-points"
+            placeholder="Discussion Points (one per line)"
+            style="
+              width: 100%;
+              max-width: 520px;
+              padding: 8px;
+              margin-bottom: 8px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+              height: 80px;
+              resize: vertical;
+            "
+          ></textarea>
+        </section>
+
+        <!-- Status and Timer -->
+        <div row>
+          <div class="mono" data-status>disconnected</div>
+          <div>Timer: <span data-timer>00:00</span></div>
+        </div>
+
+        <!-- Meeting info bar (meeting object summary) -->
         <div
-          id="user-avatar"
-          style="
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            margin-left: 10px;
-          "
-        ></div>
+          row
+          id="meeting-info"
+          style="background: #f0f0f0; padding: 8px; border-radius: 4px"
+        >
+          <div>Meeting: <span id="meeting-id">-</span></div>
+          <div>
+            Participants: <span id="participant-count">1</span>/<span
+              id="max-participants"
+              >10</span
+            >
+          </div>
+          <div id="meeting-type">Direct Call</div>
+        </div>
       </div>
 
-      <!-- Meeting details editor (tied to meeting object) -->
-      <section col id="meeting-details-section" hidden>
-        <h3>Meeting Details</h3>
-        <input
-          id="meeting-title"
-          placeholder="Meeting Title"
-          style="
-            width: 100%;
-            max-width: 520px;
-            padding: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-          "
-        />
-        <textarea
-          id="meeting-topic"
-          placeholder="Meeting Topic/Agenda"
-          style="
-            width: 100%;
-            max-width: 520px;
-            padding: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            height: 60px;
-            resize: vertical;
-          "
-        ></textarea>
-        <textarea
-          id="discussion-points"
-          placeholder="Discussion Points (one per line)"
-          style="
-            width: 100%;
-            max-width: 520px;
-            padding: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            height: 80px;
-            resize: vertical;
-          "
-        ></textarea>
-      </section>
-      <div row>
-        <input
-          data-url
-          placeholder="paste ?meetingInfo=… or full meeting URL"
-          style="width: 100%; max-width: 520px"
-        />
-        <button data-perms>Request Cam/Mic</button>
-        <button data-start>Start</button>
-        <button data-stop>Stop</button>
+      <!-- Call Video / Permissions Settings -->
+      <div class="section" id="call-settings">
+        <h3>Call Video / Permissions Settings</h3>
+        
+        <!-- Username and avatar (pre-join identity) -->
+        <div row id="username-section">
+          <input
+            id="username-input"
+            placeholder="Enter your name"
+            style="
+              width: 200px;
+              padding: 8px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+            "
+          />
+          <div
+            id="user-avatar"
+            style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              color: white;
+              font-weight: bold;
+              font-size: 18px;
+              margin-left: 10px;
+            "
+          ></div>
+        </div>
+
+        <!-- Permission and control buttons -->
+        <div row>
+          <button data-perms>Request Cam/Mic</button>
+          <button data-start>Start</button>
+          <button data-stop>Stop</button>
+        </div>
+
+        <!-- Device selection -->
+        <div row>
+          <select data-video></select>
+          <select data-audio></select>
+          <select data-out></select>
+        </div>
+
+        <!-- Local media preview before joining -->
+        <div col>
+          <div>Local Preview (pre-join)</div>
+          <video autoplay playsinline muted hidden data-preview></video>
+        </div>
+
+        <div data-q data-level="good"><i></i></div>
+
+        <!-- In-call controls -->
+        <div row>
+          <button data-toggle-audio disabled>Mute</button>
+          <button data-toggle-video disabled>Video Off</button>
+          <button id="love-btn" disabled title="Send LOVE to everyone">LOVE ❤️</button>
+        </div>
+
+        <!-- Background filter controls -->
+        <div row>
+          <label>Background Filter:</label>
+          <select id="background-filter-select" disabled>
+            <option value="none">None</option>
+            <option value="blur-low">Blur</option>
+            <!-- <option value="blur-medium">Blur (Medium)</option>
+            <option value="blur-high">Blur (High)</option> -->
+            <option value="predefined">Predefined Backgrounds</option>
+            <option value="replacement">Custom Image URL</option>
+          </select>
+          <select id="predefined-backgrounds" style="display: none;" disabled>
+            <option value="">Select Background...</option>
+            <option value="office">Office</option>
+            <option value="nature">Nature</option>
+          </select>
+          <input type="url" id="background-image-url" placeholder="Image URL" style="display: none;" />
+          <button id="apply-background-filter" disabled>Apply Filter</button>
+        </div>
       </div>
 
-      <div row>
-        <select data-video></select>
-        <select data-audio></select>
-        <select data-out></select>
-      </div>
-
-      <!-- Local media preview before joining -->
-      <div col>
-        <div>Local Preview (pre-join)</div>
-        <video autoplay playsinline muted hidden data-preview></video>
-      </div>
-
-      <div row>
-        <div class="mono" data-status>disconnected</div>
-        <div>Timer: <span data-timer>00:00</span></div>
-      </div>
-
-      <div data-q data-level="good"><i></i></div>
-
-      <!-- In-call controls -->
-      <div row>
-        <button data-toggle-audio disabled>Mute</button>
-        <button data-toggle-video disabled>Video Off</button>
-        <button id="love-btn" disabled title="Send LOVE to everyone">LOVE ❤️</button>
-      </div>
-
-      <!-- Background filter controls -->
-      <div row>
-        <label>Background Filter:</label>
-        <select id="background-filter-select" disabled>
-          <option value="none">None</option>
-          <option value="blur-low">Blur</option>
-          <!-- <option value="blur-medium">Blur (Medium)</option>
-          <option value="blur-high">Blur (High)</option> -->
-          <option value="predefined">Predefined Backgrounds</option>
-          <option value="replacement">Custom Image URL</option>
-        </select>
-        <select id="predefined-backgrounds" style="display: none;" disabled>
-          <option value="">Select Background...</option>
-          <option value="office">Office</option>
-          <option value="nature">Nature</option>
-        </select>
-        <input type="url" id="background-image-url" placeholder="Image URL" style="display: none;" />
-        <button id="apply-background-filter" disabled>Apply Filter</button>
-      </div>
-
-      <!-- Host controls (visible to host only) -->
-      <div row id="host-controls" hidden>
+      <!-- Host Controls -->
+      <div class="section" id="host-controls" hidden>
         <h3>Host Controls</h3>
-        <button id="mute-all">Mute All</button>
-        <button id="unmute-all">Unmute All</button>
-        <button id="pin-attendee">Pin Attendee</button>
-        <button id="set-max-attendees">Set Max Attendees</button>
+        <div class="person">
+          <!-- Main Video Area (host/featured video) -->
+          <div col id="main-video-area">
+            <div>Main Video</div>
+            <div class="feed">
+              <video
+                autoplay
+                playsinline
+                muted
+                data-main-video
+                style="width: 100%; max-width: 800px; background: #000"
+              ></video>
+            </div>
+            <div class="statusline" id="main-video-status"></div>
+          </div>
+        </div>
+        
+        <!-- Host action buttons -->
+        <div row>
+          <button id="mute-all">Mute All</button>
+          <button id="unmute-all">Unmute All</button>
+          <button id="pin-attendee">Pin Attendee</button>
+          <button id="set-max-attendees">Set Max Attendees</button>
+        </div>
+
+        <!-- Collaborator management -->
         <div style="margin-top: 8px">
           <label style="display: block; font-size: 12px; opacity: 0.8">
             Collaborators (comma-separated attendee IDs, max 4)
@@ -369,36 +442,34 @@
           style="font-size: 12px; margin-top: 8px"
         ></div>
       </div>
-    </main>
 
-    <!-- === Meeting: Main Video & Participant Grid === -->
-    <section col id="video-pane" aria-label="Video Areas">
-      <!-- Main Video Area (host/featured video) -->
-      <div col id="main-video-area">
-        <div>Main Video</div>
-        <video
-          autoplay
-          playsinline
-          muted
-          data-main-video
-          style="width: 100%; max-width: 800px; background: #000"
-        ></video>
-        <div class="statusline" id="main-video-status"></div>
+      <!-- Collaborators -->
+      <div class="section" id="collaborators">
+        <h3>Collaborators</h3>
+        <!-- Dynamic collaborator entries will be populated here -->
+        <div class="person" style="display: none;" data-template="collaborator">
+          <p><span class="handle">@collab</span> — <span class="name">Collaborator Name</span></p>
+          <div class="feed">Video Feed</div>
+        </div>
       </div>
 
-      <!-- Sidebar Grid (Other Attendees) -->
-      <div row style="gap: 16px; align-items: flex-start">
+      <!-- Attendees -->
+      <div class="section" id="attendees">
+        <h3>Attendees</h3>
+        
         <!-- Local Video (if not main) -->
-        <div col id="local-video-sidebar" hidden>
-          <div>Local</div>
-          <video
-            autoplay
-            playsinline
-            muted
-            data-local
-            style="width: 200px; background: #000"
-          ></video>
-          <div class="statusline" id="status-self"></div>
+        <div class="person" id="local-video-sidebar" hidden>
+          <p><span class="handle">@local</span> — <span class="name">Local User</span></p>
+          <div class="feed">
+            <video
+              autoplay
+              playsinline
+              muted
+              data-local
+              style="width: 100%; background: #000"
+            ></video>
+            <div class="statusline" id="status-self"></div>
+          </div>
         </div>
 
         <!-- Remote Videos Grid -->
@@ -414,23 +485,7 @@
           ></div>
         </div>
       </div>
-
-      <!-- Meeting info bar (meeting object summary) -->
-      <div
-        row
-        id="meeting-info"
-        style="background: #f0f0f0; padding: 8px; border-radius: 4px"
-      >
-        <div>Meeting: <span id="meeting-id">-</span></div>
-        <div>
-          Participants: <span id="participant-count">1</span>/<span
-            id="max-participants"
-            >10</span
-          >
-        </div>
-        <div id="meeting-type">Direct Call</div>
-      </div>
-    </section>
+    </div>
 
     <!-- === Meeting: Details Display (read-only) === -->
     <section

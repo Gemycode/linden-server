@@ -2866,16 +2866,30 @@ function ROOT() {
           if (typeof transformDevice.chooseNewInnerDevice === "function") {
             await transformDevice.chooseNewInnerDevice(deviceId);
             await av.startVideoInput(transformDevice);
+            console.log(`[VIDEO] Switched to camera via transform: ${deviceId}`);
+            // Ensure local element reflects change immediately
+            try {
+              if (state.localTileId && els.local) {
+                av.bindVideoElement(state.localTileId, els.local);
+              }
+            } catch {}
             return;
           }
         } catch (e) {
-          console.warn("chooseNewInnerDevice failed, recreating transform", e);
+          console.warn("[VIDEO] chooseNewInnerDevice failed, recreating transform", e);
         }
         try {
           await BackgroundFilterHandler.applyFilter(state.backgroundFilter.type, state.backgroundFilter.imageUrl || "");
+          console.log("[VIDEO] Background filter reapplied after camera switch");
+          console.log(`[VIDEO] Switched to camera: ${deviceId}`);
+          try {
+            if (state.localTileId && els.local) {
+              av.bindVideoElement(state.localTileId, els.local);
+            }
+          } catch {}
           return;
         } catch (e) {
-          console.warn("Re-applying background filter failed, falling back to raw device", e);
+          console.warn("[VIDEO] Re-applying background filter failed, falling back to raw device", e);
         }
       }
 
@@ -2885,8 +2899,15 @@ function ROOT() {
       if (typeof av.startVideoInput === "function") {
         await av.startVideoInput(deviceId);
       }
+      console.log(`[VIDEO] Switched to camera: ${deviceId}`);
+      try {
+        // Rebind local element to reflect new camera instantly
+        if (state.localTileId && els.local) {
+          av.bindVideoElement(state.localTileId, els.local);
+        }
+      } catch {}
     } catch (e) {
-      console.warn("switchVideoInput failed", e);
+      console.error("[VIDEO] Video device switch failed:", e);
     }
   }
 
@@ -2946,15 +2967,17 @@ function ROOT() {
 
       // Auto-select first available if previous disappeared
       if (!videoStillThere && els.selV?.value) {
+        console.log(`[DEVICE] Camera unplugged or missing: ${prevVideo}. Auto-failover to: ${els.selV.value}`);
         state.videoDevice = els.selV.value;
         if (state.av) await switchVideoInput(state.videoDevice);
       }
       if (!audioStillThere && els.selA?.value) {
+        console.log(`[DEVICE] Microphone unplugged or missing: ${prevAudio}. Auto-failover to: ${els.selA.value}`);
         state.audioDevice = els.selA.value;
         if (state.av) await switchAudioInput(state.audioDevice);
       }
     } catch (e) {
-      console.warn("handleDeviceChange failed", e);
+      console.warn("[DEVICE] handleDeviceChange failed", e);
     }
   }
 
@@ -2962,6 +2985,7 @@ function ROOT() {
   try {
     if (navigator.mediaDevices && typeof navigator.mediaDevices.addEventListener === "function") {
       navigator.mediaDevices.addEventListener("devicechange", () => {
+        console.log("[DEVICE] devicechange detected");
         handleDeviceChange().catch(() => {});
       });
     }
